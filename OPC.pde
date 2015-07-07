@@ -27,7 +27,8 @@ public class OPC
     this.host = host;
     this.port = port;
     this.enableShowLocations = true;
-    parent.registerDraw(this);
+    //this line breaks in latest processing
+    //parent.registerDraw(this);
   }
 
   // Set the location of a single LED
@@ -346,4 +347,3 @@ public class OPC
     sendFirmwareConfigPacket();
   }
 }
-
