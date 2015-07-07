@@ -27,7 +27,9 @@ public class OPC
     this.host = host;
     this.port = port;
     this.enableShowLocations = true;
-    //this line breaks in latest processing
+    
+    //!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //this line breaks in latest processing:
     //parent.registerDraw(this);
   }
 
