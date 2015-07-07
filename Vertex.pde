@@ -20,7 +20,14 @@ class Vertex extends PVector
     this.v = v;
     normal = new PVector();
   }
-  
+
+  Vertex( float x, float y, float z, float u, float v, float nx, float ny, float nz )
+  {
+    super(x, y, z);
+    this.u = u;
+    this.v = v;
+    normal = new PVector(nx, ny, nz);
+  }
   
   
   void setUv( float u, float v )

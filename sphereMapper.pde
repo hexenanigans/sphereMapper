@@ -32,7 +32,16 @@ void setup()
   for( int i = 0; i < sphere.getVertexCount(); i++ )
   {
     //where are tex coords?
-    sphereVecs.add( new Vertex( sphere.getVertex(i).x, sphere.getVertex(i).y, sphere.getVertex(i).z ) );
+    float x, y, z, u, v, nx, ny, nz;
+    x = sphere.getVertex(i).x;
+    y = sphere.getVertex(i).y;
+    z = sphere.getVertex(i).z;
+    u = sphere.getTextureU(i);
+    v = sphere.getTextureV(i);
+    nx = sphere.getNormalX(i);
+    ny = sphere.getNormalY(i);
+    nz = sphere.getNormalZ(i);
+    sphereVecs.add( new Vertex( x, y, z, u, v, nx, ny, nz ) );
   }  
   
   //openGL stuff
