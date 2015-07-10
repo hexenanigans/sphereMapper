@@ -28,9 +28,9 @@ public class OPC
     this.port = port;
     this.enableShowLocations = true;
     
-    //!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    //this line breaks in latest processing:
-    //parent.registerDraw(this);
+    
+    //this line breaks in processing 3
+    parent.registerDraw(this);
   }
 
   // Set the location of a single LED

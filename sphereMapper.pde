@@ -1,8 +1,29 @@
+import oscP5.*;
+
+/*
+    OSC 
+    port: 10000
+    addresses:
+    /rx 0.0
+    /ry 0.0
+    /rz 0.0
+    /rw 0.0 (angle in degrees)
+*/
+
+OscP5 osc;
+OPC opc;
+
+//auto rotate when no OSC available
+boolean doAutoRotate = false;
+float rotationWxyz[] = new float[4];
+
 int texSphereDensity = 80;
 int ledSphereDensity = 22;
 int sphereSize = 200;
 
 PShape sphere;
+
+//Sphere miniSphere;
 
 //make this texture a syphon source
 PImage planetTexture;
@@ -10,7 +31,7 @@ PImage planetTexture;
 ArrayList<Vertex> texSphereVerts = new ArrayList<Vertex>();
 ArrayList<Vertex> ledSphereVerts = new ArrayList<Vertex>(); 
 
-OPC opc;
+
 
 
 //----------------------------
@@ -20,6 +41,9 @@ void setup()
   
   //OPC stuff
   opc = new OPC(this, "127.0.0.1", 7890);
+  
+  //OSC stuff
+  osc = new OscP5( this, 10000 );
   
   
   //LED Sphere stuff
@@ -126,28 +150,49 @@ void draw()
 
 
 
+//----------------------------
 void update()
 {
   //update all the things
-  findNearestVerts(  (float)millis()/100 , 0.9, 0.5, 0.2 );
+  if( doAutoRotate ) autoRotate();
+  findNearestVerts();
+}
+
+
+
+//----------------------------
+void autoRotate()
+{
+  rotationWxyz[0] = (float)millis()/100;
+  rotationWxyz[1] = 0.9; 
+  rotationWxyz[2] = 0.5;
+  rotationWxyz[3] = 0.2;
 }
 
 
 
 
 
-void findNearestVerts( float angle, float x, float y, float z )
+//This function finds the nearest tSphere vertices of all ledSphere vertices
+void findNearestVerts()
 {
-  //This function finds the nearest tSphere vertices of all ledSphere vertices
+  
   
   for( int i = 0; i < ledSphereVerts.size(); i++ )
   {
+    float angle, rx, ry, rz;
+    angle = rotationWxyz[0];
+    rx = rotationWxyz[1];
+    ry = rotationWxyz[2];
+    rz = rotationWxyz[3];
+    
+    
     int foundIndex = -1;
     
     float foundDistance = 1000.0;
     
     //rotate vertex as needed
-    Vertex rotatedVertex = ledSphereVerts.get(i).rotate3d( angle, x, y, z );
+    Vertex rotatedVertex = ledSphereVerts.get(i).rotate3d( angle, rx, ry, rz );
     
     for( int j = 0; j < texSphereVerts.size(); j++ )
     {
@@ -201,6 +246,8 @@ void drawTexSphere( boolean doPoints, boolean doColour )
 }
 
 
+
+
 //----------------------------
 void drawLedSphere()
 {
@@ -213,6 +260,8 @@ void drawLedSphere()
            ledSphereVerts.get(i).z ); 
   }
 }
+
+
 
 //----------------------------
 void drawLedSphere( float theta, float rx, float ry, float rz )
@@ -259,3 +308,17 @@ void drawNearestVerts( boolean doColour )
     }
   }
 }
+
+
+
+void oscEvent( OscMessage msg )
+{
+  if( msg.checkAddrPattern( "/rw" ) ) rotationWxyz[0] = msg.get(0).floatValue();
+  if( msg.checkAddrPattern( "/rx" ) ) rotationWxyz[1] = msg.get(0).floatValue();
+  if( msg.checkAddrPattern( "/ry" ) ) rotationWxyz[2] = msg.get(0).floatValue();
+  if( msg.checkAddrPattern( "/rz" ) ) rotationWxyz[3] = msg.get(0).floatValue();
+  //println("x: " + rotationXyz[0] + ", y: " + rotationXyz[1] + ", rz: " + rotationXyz[2] );
+}
+
+
+

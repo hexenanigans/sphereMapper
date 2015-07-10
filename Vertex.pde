@@ -67,10 +67,9 @@ class Vertex extends PVector
   { 
     Vertex outVertex = new Vertex( this.x, this.y, this.z );
     
-      PMatrix3D rMat = new PMatrix3D();
-      rMat.rotate(radians(theta),rx,ry,rz);
-      rMat.mult(this, outVertex);
-    
+    PMatrix3D rMat = new PMatrix3D();
+    rMat.rotate( radians( theta ), rx, ry, rz );
+    rMat.mult(this, outVertex);
     
     return outVertex;
   }
