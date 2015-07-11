@@ -14,7 +14,7 @@ OscP5 osc;
 OPC opc;
 
 //auto rotate when no OSC available
-boolean doAutoRotate = false;
+boolean doAutoRotate = true;
 float rotationWxyz[] = new float[4];
 
 int texSphereDensity = 80;
@@ -23,9 +23,7 @@ int sphereSize = 200;
 
 PShape sphere;
 
-//Sphere miniSphere;
-
-//make this texture a syphon source
+//TODO: make this texture a syphon source
 PImage planetTexture;
 
 ArrayList<Vertex> texSphereVerts = new ArrayList<Vertex>();
@@ -44,6 +42,8 @@ void setup()
   
   //OSC stuff
   osc = new OscP5( this, 10000 );
+  
+  
   
   
   //LED Sphere stuff
@@ -129,16 +129,20 @@ void draw()
   pushMatrix();
     
     translate( width/2, height/2 );
-    rotateY( (float)millis()/4000 );
+    //rotateY( (float)millis()/4000 );
     
     drawTexSphere( true, true );
     
+    
     //drawLedSphere( (float)millis()/1000 , 0.9, 0.5, 0.2 );
-    //the above should be equivalant to this (but currently isn't):
-    /*pushMatrix();
-      rotate( radians( (float)millis()/100 ), 0.9, 0.5, 0.2 ); 
-      drawLedSphere();
-    popMatrix();*/
+    
+    //the above should be equivalant to below but currently isn't.. radians/degress issue?
+    
+    //pushMatrix();
+    //  rotate( radians( (float)millis()/100 ), 0.9, 0.5, 0.2 ); 
+    //  drawLedSphere();
+    //popMatrix();
+
 
     // set true to pull colour from texture
     drawNearestVerts( true );
@@ -176,8 +180,6 @@ void autoRotate()
 //This function finds the nearest tSphere vertices of all ledSphere vertices
 void findNearestVerts()
 {
-  
-  
   for( int i = 0; i < ledSphereVerts.size(); i++ )
   {
     float angle, rx, ry, rz;
@@ -310,7 +312,7 @@ void drawNearestVerts( boolean doColour )
 }
 
 
-
+//----------------------------
 void oscEvent( OscMessage msg )
 {
   if( msg.checkAddrPattern( "/rw" ) ) rotationWxyz[0] = msg.get(0).floatValue();
